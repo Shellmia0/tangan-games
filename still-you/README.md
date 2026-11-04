@@ -119,7 +119,12 @@ still-you/
 
 小红书发不了游戏文件，帖子里放图和视频，链接放评论区置顶或个人简介。看帖的人在手机上点开链接就能玩，所以发出去的是网页版。
 
-网页版就是 `index.html`、`style.css`、`js/`、`assets/` 四样，`dist/still-you-web.zip` 已经打包好。传到任意静态托管：
+线上地址（GitHub Pages，仓库 Shellmia0/tangan-games，整个 GameDev 目录就是仓库，推到 main 就自动更新）：
+
+- 游戏：https://shellmia0.github.io/tangan-games/still-you/
+- 合集入口：https://shellmia0.github.io/tangan-games/
+
+网页版就是 `index.html`、`style.css`、`js/`、`assets/` 四样，`dist/still-you-web.zip` 已经打包好。国内打不开 GitHub Pages 的话，换一个静态托管：
 
 - Cloudflare Pages：dash.cloudflare.com → Workers & Pages → Create → Upload assets，把 zip 解压后的文件夹拖进去，得到一个 `xxx.pages.dev` 地址。免费，国内大多数网络能打开。
 - 腾讯云 EdgeOne Pages：同样支持直接上传文件夹，国内访问更稳。
