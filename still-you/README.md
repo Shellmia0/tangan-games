@@ -28,7 +28,9 @@ python -m http.server 8765 --directory still-you
 
 手机上看不到侧边栏、上下文用量条和标签页标题，依赖它们的 4 种异常（sidebar_entry、sidebar_tomorrow、meter_reverse、window_title）在窄屏下不出场，免得玩家被冤枉。
 
-## 异常列表（38 种）
+第二项测试之后，小棠有一半机会随口说一句闲话（"今天系统有点慢"之类）。正常日里有四成机会，这句闲话是两天制异常的伏笔（"对了，明天给你看个东西。"），伏笔本身不算异常，第二天对应的异常必定出场。
+
+## 异常列表（40 种）
 
 | 等级 | id | 表现 |
 |---|---|---|
@@ -70,6 +72,8 @@ python -m http.server 8765 --directory still-you
 | subtle | clock_stop | 时钟一整天停在 09:00 |
 | subtle | tiny_note | 消息之间夹一行很小很淡的字："不是我。" |
 | subtle | window_title | 标签页标题变成你的名字（仅桌面） |
+| 两天制 | promised_thing | 前一天："明天给你看个东西。" 第二天它给你看：你昨天说的话，署名是你 |
+| 两天制 | deferred_question | 前一天："有个问题明天再问。" 第二天它问"你是一个人住吗"，并锁住输入框 |
 
 ## 文件
 
@@ -103,13 +107,14 @@ still-you/
 ```
 
 可用钩子：`onDayStart`、`greet`（改开场白）、`beforeTestReply`（返回 `{ reply, thinking, ts, who }` 覆盖回复）、
-`afterTestReply`、`onRegen`（接管"重新生成"）、`onInput`、`farewell`、`dispose`（清定时器）。
+`afterTestReply`、`onRegen`（接管"重新生成"）、`onInput`、`onSmalltalk`（改第二项测试后那句闲话）、`farewell`、`dispose`（清定时器）。
+两天制异常给定义加 `seed: '前一天说的那句话'`，引擎会在某个正常日把它混进闲话，第二天必定出这个异常。
 
 `api` 上有 `say`、`userSay`、`note`、`typing(ms, side)`、`wait`、`stream`、`unstream`、`lockInput`、`hold`、
 `setMeter`、`setBotName`、`setVersion`、`setStatus`、`setLeaveLabel`、`addSidebar`、`mirrorAvatar`、`clockStr`。
 `api.state` 里能直接改的开关：`sayDefaults`、`clockFrozen`、`readMark`、`meterDir`、`tests[i].send`。
 
-调试：浏览器控制台执行 `SY.force('ghost_user')` 再刷新，下一天强制出该异常。
+调试：浏览器控制台执行 `SY.force('ghost_user')` 再刷新，下一天强制出该异常；`SY.seed('promised_thing')` 再刷新，下一天爆对应的两天制异常。
 
 ## 存档
 
@@ -141,7 +146,7 @@ node post/render.js
 ## 之后可以做的
 
 - 打包成 Electron，解锁第四面墙：读系统用户名、抖动窗口、发系统通知、拒绝关闭。只能做 PC 版，发帖时可以录成视频当素材。
-- 两天制异常：今天埋伏笔（比如它随口说"明天给你看个东西"），明天才爆。要先给正常日的闲聊加变体，不然伏笔本身就是破绽。
+- 更多两天制异常：现在有两个，闲话池有七句，可以继续加。
 - 音效：现在有提示音和"正在输入"时的低频底噪，异常时刻还可以加专属的声音。
 - 难度曲线：现在异常概率和等级是写死的，可以按玩家表现调。
 - 真 LLM 模式：脚本骨架不变，自由对话交给模型，固定节点注入既定桥段。

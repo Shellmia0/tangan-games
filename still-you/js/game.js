@@ -255,7 +255,14 @@
 
   function pickAnomaly(day) {
     if (day === 1 || day >= 8) return null;
-    const eligible = ANOM.filter((a) => (!a.when || a.when(state)) && !state.usedThisRun.includes(a.id));
+    // 昨天的闲话里埋了伏笔：今天必定是对应的两天制异常
+    const seedId = store.get('seed', null);
+    if (seedId) {
+      store.set('seed', null);
+      const def = ANOM.find((a) => a.id === seedId);
+      if (def && !state.usedThisRun.includes(def.id)) return instantiate(def);
+    }
+    const eligible = ANOM.filter((a) => !a.seed && (!a.when || a.when(state)) && !state.usedThisRun.includes(a.id));
     // 有条件触发且标了 priority 的异常（比如"你中途走了"），第一次满足条件时直接上
     const priority = eligible.filter((a) => a.priority && !state.seen.includes(a.id));
     if (priority.length) return instantiate(pick(priority));
@@ -267,7 +274,7 @@
       : ['strong', 'medium', 'subtle'];
     let pool = eligible.filter((a) => tiers.includes(a.tier));
     if (!pool.length) pool = eligible;
-    if (!pool.length) pool = ANOM.filter((a) => !a.when || a.when(state));
+    if (!pool.length) pool = ANOM.filter((a) => !a.seed && (!a.when || a.when(state)));
     const unseen = pool.filter((a) => !state.seen.includes(a.id));
     return instantiate(pick(unseen.length ? unseen : pool));
   }
@@ -339,7 +346,7 @@
       if (!chipTest) state.todayLines.push(text);
       const test = state.done ? null : (chipTest || matchTest(text, state.tests));
       if (state.interject) { const s = state.interject; state.interject = null; await say(s); }
-      if (test) await runTest(test);
+      if (test) { await runTest(test); if (state.testIdx === 2 && !state.done) await smalltalk(); }
       else await freeReply(text);
       if (!state.done && state.testIdx >= state.tests.length) await finishDay();
     } finally {
@@ -366,6 +373,21 @@
     test.done = true; state.testIdx++;
     renderChips();
     if (a && a.afterTestReply) await a.afterTestReply(api, test.id, idx, reply);
+  }
+
+  // 第二项测试之后随口一句闲话。正常日有四成机会把两天制异常的伏笔混进去，第二天那个异常必定出场
+  async function smalltalk() {
+    if (state.day < 2 || state.day > 6) return;
+    if (Math.random() > 0.5) return;
+    let text = pick(C.SMALLTALK);
+    if (!state.anomaly && !store.get('seed', null) && Math.random() < 0.4) {
+      const seeds = ANOM.filter((a) => a.seed && !state.usedThisRun.includes(a.id));
+      if (seeds.length) { const s = pick(seeds); store.set('seed', s.id); text = s.seed; }
+    }
+    const a = state.anomaly;
+    if (a && a.onSmalltalk) text = a.onSmalltalk(api, text) || text;
+    await safeWait(600);
+    await say(text);
   }
 
   // "重新生成"：换一个说法重新打一遍
@@ -438,6 +460,7 @@
   function resetRun() {
     state.day = 1; store.set('day', 1);
     state.usedThisRun = []; store.set('usedThisRun', []);
+    store.set('seed', null);
     startDay();
   }
 
@@ -534,8 +557,8 @@
   $('btn-report').addEventListener('click', () => judge(true));
   $('btn-leave').addEventListener('click', () => judge(false));
 
-  // 调试用：控制台里 SY.force('ghost_user') 再刷新，下一天强制出该异常
-  window.SY = { state, force(id) { store.set('force', id); } };
+  // 调试用：控制台里 SY.force('ghost_user') 再刷新，下一天强制出该异常；SY.seed('promised_thing') 再刷新，下一天爆对应的两天制异常
+  window.SY = { state, force(id) { store.set('force', id); }, seed(id) { store.set('seed', id); }, smalltalk };
   const forced = store.get('force', null);
   if (forced) {
     store.set('force', null);

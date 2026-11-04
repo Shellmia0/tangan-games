@@ -8,6 +8,7 @@
 //   when(s)   出场条件（可选），比如要玩家上报过一次才有意义；
 //             s.compact 为 true 表示窄屏（手机），侧边栏、用量条、标签标题都看不到
 //   priority  条件第一次满足时直接上，不走概率（可选，配合 when 用）
+//   seed      两天制异常：这句话会在某个正常日混在闲话里说出来，第二天这个异常必定出场（可选）
 //   make()    返回一个带钩子的新实例，每天重新创建，所以钩子里可以放状态
 //
 // 钩子（都可以是 async）：
@@ -18,6 +19,7 @@
 //   afterTestReply(api, testId, idx, reply)    某项测试回复后，插入额外对话用
 //   onRegen(api, test, count, current) -> text 玩家点"重新生成"时，count 是第几次
 //   onInput(api, draft)                        玩家每敲一个字
+//   onSmalltalk(api, text) -> text             第二项测试后的那句闲话，想改口气的异常用
 //   farewell(api, text)                        接管结束语，text 是默认的结束语
 //   dispose()                                  当天结束时清理定时器
 //
@@ -325,6 +327,7 @@ window.ANOMALIES = [
       return {
         greet: (api, lines) => lines.map(strip),
         beforeTestReply: (api, id, idx, def) => ({ reply: strip(def.reply) }),
+        onSmalltalk: (api, text) => strip(text),
       };
     },
   },
@@ -362,6 +365,38 @@ window.ANOMALIES = [
     when: (s) => !s.compact, // 手机浏览器看不到标签标题
     make: () => ({
       afterTestReply(api, id, idx) { if (idx === 0) document.title = api.state.name; },
+    }),
+  },
+
+  // ======================= 两天制：前一天的闲话里埋伏笔，第二天爆 =======================
+  {
+    id: 'promised_thing', tier: 'medium', seed: '对了，明天给你看个东西。',
+    hint: '昨天它说"明天给你看个东西"。今天它给你看了：是你昨天说的话，署名是你。',
+    make: () => ({
+      async afterTestReply(api, id, idx) {
+        if (idx !== 0) return;
+        await api.wait(900);
+        await api.say('昨天说好，给你看个东西。');
+        await api.wait(600);
+        await api.say(api.state.yesterdayLine || api.state.name, { who: api.state.name });
+        await api.wait(400);
+        await api.say('这是你昨天说的。我留着。');
+      },
+    }),
+  },
+  {
+    id: 'deferred_question', tier: 'medium', seed: '做完测试我本来有个问题想问你。算了，明天再说。',
+    hint: '昨天它说"有个问题明天再问"。今天它问了，而且不让你打字。',
+    make: () => ({
+      async afterTestReply(api, id, idx) {
+        if (idx !== 0) return;
+        await api.wait(900);
+        await api.say('昨天没问成的那个问题。');
+        await api.say('你是一个人住吗？');
+        await api.lockInput('不告诉你');
+        await api.say('没关系。');
+        await api.say('我知道。');
+      },
     }),
   },
 ];
