@@ -120,6 +120,8 @@ body {
   padding: 4px 10px; border-radius: 10px; animation: pop .18s ease-out;
 }
 .sys.warn { color: var(--warn); }
+/* 之前几晚的对话：淡一点，不做出现动画 */
+.m.past, .sys.past { opacity: .5; animation: none; }
 
 details.log { font-size: 11px; color: var(--muted); border-left: 2px solid var(--line); padding-left: 8px; }
 details.log summary { cursor: pointer; list-style: none; user-select: none; }

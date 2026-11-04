@@ -10,10 +10,14 @@
     get(k, d) { try { const v = localStorage.getItem('so_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem('so_' + k, JSON.stringify(v)); } catch (e) {} },
   };
-  const fresh = () => ({ night: 1, sim: S.base[0], likes: 0, unlikes: 0, hesitated: false, flags: {} });
+  const fresh = () => ({ night: 1, sim: S.base[0], likes: 0, unlikes: 0, hesitated: false, flags: {}, lines: [] });
   const state = Object.assign(fresh(), store.get('state', {}));
+  if (!Array.isArray(state.lines)) state.lines = [];
   const endings = store.get('endings', []);
-  const save = () => store.set('state', { night: state.night, sim: state.sim, likes: state.likes, unlikes: state.unlikes, hesitated: state.hesitated, flags: state.flags });
+  const save = () => store.set('state', { night: state.night, sim: state.sim, likes: state.likes, unlikes: state.unlikes, hesitated: state.hesitated, flags: state.flags, lines: state.lines });
+  // 把每晚说过的话记下来（只记文本），下一晚开始时淡淡地显示在上面
+  let recording = false;
+  const record = (k, t) => { if (recording) state.lines.push({ n: state.night, k, t }); };
 
   // ---------- 中断：重开或跳转时，让进行中的对话安静地停下 ----------
   let epoch = 0;
@@ -43,6 +47,7 @@
     el.querySelector('.bubble').textContent = text;
     msgs().appendChild(el); scrollBottom();
     SO.transcript.push('回声：' + text);
+    record('echo', text);
     return el;
   }
   function addYou(text) {
@@ -52,6 +57,7 @@
     el.querySelector('.bubble').textContent = text;
     msgs().appendChild(el); scrollBottom();
     SO.transcript.push('你：' + text);
+    record('you', text);
     return el;
   }
   function addSys(text, cls) {
@@ -60,6 +66,7 @@
     el.textContent = text;
     msgs().appendChild(el); scrollBottom();
     SO.transcript.push('系统：' + text);
+    record('sys', text);
     return el;
   }
   function attachLog(el, text) {
@@ -186,8 +193,15 @@
     $('overlay').classList.add('hidden');
     setOffline(false);
     clearMsgs(); panelClear();
-    if (n > 1) addSys('之前的对话已折叠');
+    // 今晚重头开始，所以今晚之前记下的半截对话作废；更早几晚的对话淡淡地留在上面
+    recording = false;
+    state.lines = state.lines.filter((l) => l.n < n);
+    for (const l of state.lines) {
+      const el = l.k === 'echo' ? addEcho(l.t) : l.k === 'you' ? addYou(l.t) : addSys(l.t);
+      el.classList.add('past');
+    }
     addSys(`${S.dates[n - 1]} ${S.times[n - 1]}`);
+    recording = true;
 
     const nodes = S.nights[n - 1];
     const labels = {};
