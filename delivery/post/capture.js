@@ -20,9 +20,10 @@ shot(['--url', URL, '--js', open, '--wait', '400', '--js', "DL.fast=true; DL.jum
   '--js', "document.getElementById('btn-chat2').click(); 'ok'", '--wait', '500', '--shot', path.join(out, 'chat-gate.png')]);
 shot(['--url', URL, '--js', open, '--wait', '400', '--js', "DL.fast=true; DL.jump('门口'); 'ok'", '--wait', '3000',
   '--js', "document.getElementById('order-scroll').scrollTop=0; 'ok'", '--wait', '300', '--shot', path.join(out, 'order-door.png'),
-  '--js', "document.getElementById('btn-cs').click(); 'ok'", '--wait', '2500',
-  '--js', `(async()=>{ for(let i=0;i<6;i++){ const bs=[...document.querySelectorAll('#cs-panel button')]; if(!bs.length){ ${sl(800)}; continue; } if(bs.some(b=>b.textContent.trim()==='好')) return 'ask'; bs[0].click(); ${sl(2500)}; } return 'no ask'; })()`,
-  '--wait', '500', '--shot', path.join(out, 'cs-door.png')]);
+  // 快速模式下时间线十几秒就走到 01:30 骑手离开，所以跳到门口之后关掉快速模式再聊客服
+  '--js', "DL.fast=false; document.getElementById('btn-cs').click(); 'ok'", '--wait', '3500',
+  '--js', `await (async()=>{ for(let i=0;i<8;i++){ const bs=[...document.querySelectorAll('#cs-panel button')]; if(!bs.length){ ${sl(1000)}; continue; } if(bs.some(b=>b.textContent.trim()==='好')) return 'ask'; bs[0].click(); ${sl(5000)}; } return 'no ask'; })()`,
+  '--js', "document.getElementById('cs-msgs').scrollTop=1e6; 'ok'", '--wait', '400', '--shot', path.join(out, 'cs-door.png')]);
 shot(['--url', URL, '--js', open, '--wait', '400', '--js', "DL.fast=true; DL.jump('light'); 'ok'", '--wait', '2500',
   '--js', "document.getElementById('rider-row').click(); 'ok'", '--wait', '500', '--shot', path.join(out, 'profile.png')]);
 console.log('截图完成：' + out);
