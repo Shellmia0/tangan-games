@@ -1,0 +1,16 @@
+[
+  { "name": "01-cover", "tag": "一个模拟外卖 app 的恐怖小游戏", "head": "骑手已到达", "big": true,
+    "sub": "凌晨 01:10，推送说你的订单正在配送中。你没有点过外卖。", "img": "shots/push.png", "pos": "top",
+    "foot": "骑手离你越来越近。" },
+  { "name": "02-order", "tag": "怎么玩", "head": "看着它靠近",
+    "sub": "地图上的骑手按真实时间往你这里走：2.3 km，1.1 km，400 m，楼下，门口。", "img": "shots/order.png", "pos": "top" },
+  { "name": "03-chat", "tag": "骑手", "head": "门禁密码多少",
+    "sub": "你可以回，也可以不回。他都会进来。", "img": "shots/chat-gate.png", "pos": "bottom" },
+  { "name": "04-door", "tag": "门口", "head": "备注变成了<br>「开门」",
+    "sub": "商品列表里是你冰箱里的那瓶牛奶。最后一项是「无」。", "img": "shots/order-door.png", "pos": "60%" },
+  { "name": "05-cs", "tag": "客服", "head": "要我帮您开门吗",
+    "sub": "小棠说：您家的门锁昨天接入了棠安到家。是本机操作的。", "img": "shots/cs-door.png", "pos": "bottom" },
+  { "name": "06-cta", "tag": "现在可以玩", "head": "手机浏览器<br>直接打开",
+    "sub": "10 分钟左右，四个结局。链接在评论区和简介。", "img": "shots/profile.png", "pos": "top",
+    "foot": "纯网页，没有真的 AI，所有内容都是脚本。" }
+]

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#0b0c10">
+<meta name="description" content="凌晨 01:10，一条推送把你叫醒：您的订单正在配送中，骑手距您 2.3 公里。你没有点过外卖。一个模拟外卖 app 界面的恐怖小游戏。">
+<meta property="og:title" content="骑手已到达">
+<meta property="og:description" content="你没有点过外卖。骑手距您 2.3 公里。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23ffb84d'/%3E%3Cpath d='M9 24h22l-3-9H12z' fill='%231a1206'/%3E%3Ccircle cx='14' cy='28' r='3' fill='%231a1206'/%3E%3Ccircle cx='26' cy='28' r='3' fill='%231a1206'/%3E%3C/svg%3E">
+<title>棠安到家</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="statusbar"><span id="sb-time">01:10</span><span class="sb-right"><i class="sig"></i>42%</span></div>
+
+  <!-- 推送：锁屏 -->
+  <section id="screen-push" class="screen push">
+    <div class="lock-time" id="lock-time">01:10</div>
+    <div class="lock-date">11月5日 星期三</div>
+    <button type="button" class="push-card" id="push-card">
+      <div class="push-head"><span class="push-app"><i class="app-dot"></i>棠安到家</span><span class="push-when">刚刚</span></div>
+      <div class="push-title">您的订单正在配送中</div>
+      <div class="push-text">骑手距您 2.3 公里，预计 01:25 送达。</div>
+    </button>
+    <div class="lock-hint">轻点通知查看订单</div>
+  </section>
+
+  <!-- 订单页 -->
+  <section id="screen-order" class="screen hidden">
+    <header class="bar">
+      <span class="bar-title">订单详情</span>
+      <span class="bar-right muted" id="order-no-short">TA…0077</span>
+    </header>
+    <div class="scroll" id="order-scroll">
+      <div class="status-card">
+        <div class="status-main" id="status-main">配送中</div>
+        <div class="status-sub"><span id="dist-label">骑手距您 2.3 km</span><span class="dot-sep">·</span><span id="eta-label">预计 01:25 送达</span></div>
+        <div class="map" id="map">
+          <div class="road r1"></div><div class="road r2"></div><div class="road r3"></div><div class="road r4"></div>
+          <div class="block b1"></div><div class="block b2"></div><div class="block b3"></div><div class="block b4"></div>
+          <div class="pin store" id="pin-store"><span>店</span></div>
+          <div class="pin you" id="pin-you"><span>你</span></div>
+          <div class="pin rider" id="pin-rider"><span></span></div>
+          <div class="map-label" id="map-label">和平路 · 当前位置</div>
+        </div>
+      </div>
+
+      <div class="door-bar hidden" id="door-bar">
+        <div class="door-text"><b>骑手在门口</b><span id="door-sub">等待取货</span></div>
+        <button type="button" class="btn warm" id="btn-open-door">开门</button>
+      </div>
+
+      <div class="card rider-row" id="rider-row">
+        <div class="av" id="rider-av">陈</div>
+        <div class="rider-info">
+          <div class="rider-name" id="rider-name">陈师傅 <span class="tag" id="rider-rating">4.9</span></div>
+          <div class="muted small" id="rider-sub">棠安到家骑手 · 已完成 3 单</div>
+        </div>
+        <button type="button" class="icon-btn" id="btn-chat" title="联系骑手"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><i class="badge hidden" id="chat-badge"></i></button>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span id="store-name">24 小时便利店（和平路店）</span><span class="muted small">营业中</span></div>
+        <ul class="items" id="items"></ul>
+        <div class="total"><span class="muted">合计</span><span id="total">¥13.50</span></div>
+      </div>
+
+      <div class="card kv">
+        <div class="row"><span class="k">收货地址</span><span class="v" id="addr">当前位置<small>由本机定位 · 精确到门</small></span></div>
+        <div class="row"><span class="k">联系电话</span><span class="v">139****0836</span></div>
+        <div class="row"><span class="k">备注</span><span class="v" id="remark">放门口 别敲门</span></div>
+      </div>
+
+      <div class="card kv">
+        <div class="row"><span class="k">订单编号</span><span class="v mono" id="order-no">TA2025110501030077</span></div>
+        <div class="row"><span class="k">下单时间</span><span class="v">今天 01:03</span></div>
+        <div class="row"><span class="k">下单设备</span><span class="v">本机</span></div>
+        <div class="row"><span class="k">支付方式</span><span class="v">免密支付 · 已扣款</span></div>
+      </div>
+
+      <button type="button" class="link-btn" id="btn-cancel">取消订单</button>
+      <div class="pad"></div>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn ghost" id="btn-cs">联系客服</button>
+      <button type="button" class="btn warm" id="btn-chat2">联系骑手</button>
+    </div>
+  </section>
+
+  <!-- 骑手聊天 -->
+  <section id="screen-chat" class="screen hidden">
+    <header class="bar">
+      <button type="button" class="back" id="back-chat">‹</button>
+      <button type="button" class="bar-title link" id="chat-title">陈师傅 <span class="muted small">骑手</span></button>
+      <span class="bar-right muted small" id="chat-status"></span>
+    </header>
+    <div class="msgs" id="chat-msgs"></div>
+    <div class="panel" id="chat-panel"></div>
+  </section>
+
+  <!-- 骑手资料 -->
+  <section id="screen-rider" class="screen hidden">
+    <header class="bar">
+      <button type="button" class="back" id="back-rider">‹</button>
+      <span class="bar-title">骑手信息</span>
+    </header>
+    <div class="scroll">
+      <div class="profile">
+        <div class="av big" id="prof-av">陈</div>
+        <div class="prof-name" id="prof-name">陈师傅</div>
+        <div class="muted small" id="prof-id">棠安到家 · 骑手编号 0837</div>
+        <div class="prof-stats">
+          <div><b id="prof-rating">4.9</b><span>评分</span></div>
+          <div><b id="prof-done">3</b><span>已完成</span></div>
+          <div><b id="prof-rate">100%</b><span>准时率</span></div>
+        </div>
+      </div>
+      <div class="card kv">
+        <div class="row"><span class="k">注册时间</span><span class="v" id="prof-joined">今天</span></div>
+        <div class="row"><span class="k">配送记录</span><span class="v" id="prof-note">已完成 3 单 · 全部送往当前位置</span></div>
+        <div class="row"><span class="k">当前订单</span><span class="v" id="prof-cur">配送中 · 距您 2.3 km</span></div>
+        <div class="row"><span class="k">实名认证</span><span class="v">已认证</span></div>
+      </div>
+      <div class="card" id="complaint-card">
+        <div class="card-head"><span>投诉骑手</span></div>
+        <div class="muted small" style="padding:0 14px 10px">投诉成立将为您更换骑手。</div>
+        <div class="complaint-opts" id="complaint-opts"></div>
+      </div>
+      <div class="pad"></div>
+    </div>
+  </section>
+
+  <!-- 客服 -->
+  <section id="screen-cs" class="screen hidden">
+    <header class="bar">
+      <button type="button" class="back" id="back-cs">‹</button>
+      <span class="bar-title">小棠 <span class="muted small">在线客服</span></span>
+    </header>
+    <div class="msgs" id="cs-msgs"></div>
+    <div class="panel" id="cs-panel"></div>
+  </section>
+
+  <!-- 结局 -->
+  <section id="screen-ending" class="screen ending hidden">
+    <div class="ending-lines" id="ending-lines"></div>
+    <div class="ending-foot">
+      <div class="ending-title" id="ending-title"></div>
+      <button type="button" class="btn ghost hidden" id="btn-restart">重新开始</button>
+    </div>
+  </section>
+
+  <button type="button" class="notif hidden" id="notif"><span class="n-app"><i class="app-dot"></i>棠安到家</span><span class="n-text" id="notif-text"></span></button>
+  <div class="toast hidden" id="toast"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
