@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="你在深夜的公交站捡到一部手机。翻一翻，弄清机主是谁。一个模拟手机界面的恐怖小游戏。">
+<meta property="og:title" content="捡到的手机">
+<meta property="og:description" content="深夜公交站捡到一部手机。它的联系人开始给你发消息。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23111318'/%3E%3Crect x='13' y='7' width='14' height='26' rx='3' fill='none' stroke='%23e8eaf0' stroke-width='2'/%3E%3Ccircle cx='20' cy='29' r='1.4' fill='%23e8eaf0'/%3E%3C/svg%3E">
+<title>捡到的手机</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="phone">
+  <div id="statusbar"><span id="sb-time">23:47</span><span class="sb-right"><i class="sig"></i><span id="sb-batt">7%</span><i class="batt"></i></span></div>
+
+  <!-- 锁屏 -->
+  <section id="lock" class="screen">
+    <div class="lock-time" id="lock-time">23:47</div>
+    <div class="lock-date" id="lock-date"></div>
+    <div class="lock-notifs" id="lock-notifs"></div>
+    <div class="lock-widgets" id="lock-widgets"></div>
+    <div class="lock-hint">轻点屏幕解锁</div>
+  </section>
+
+  <!-- 密码 -->
+  <section id="pin" class="screen hidden">
+    <div class="pin-title">输入密码</div>
+    <div class="pin-dots" id="pin-dots"><i></i><i></i><i></i><i></i></div>
+    <div class="pin-msg" id="pin-msg"></div>
+    <div class="numpad" id="numpad"></div>
+    <button type="button" class="pin-cancel" id="pin-cancel">取消</button>
+  </section>
+
+  <!-- 主屏 -->
+  <section id="home" class="screen hidden">
+    <div class="apps" id="apps"></div>
+  </section>
+
+  <!-- 所有 app 共用一个容器 -->
+  <section id="app" class="screen hidden">
+    <header class="app-head">
+      <button type="button" class="back" id="app-back" aria-label="返回">‹</button>
+      <div class="app-titles"><div class="app-title" id="app-title"></div><div class="app-sub" id="app-sub"></div></div>
+    </header>
+    <div class="app-body" id="app-body"></div>
+    <div class="app-foot" id="app-foot"></div>
+  </section>
+
+  <!-- 结局 -->
+  <section id="ending" class="screen hidden">
+    <div class="ending-text" id="ending-text"></div>
+    <div class="ending-title" id="ending-title"></div>
+    <button type="button" class="btn hidden" id="ending-btn">重新开始</button>
+  </section>
+
+  <div id="notifs"></div>
+  <div id="toast" class="hidden"></div>
+  <div id="calling" class="hidden"><div class="calling-num" id="calling-num"></div><div class="calling-state" id="calling-state"></div></div>
+  <div id="off" class="hidden"></div>
+  <div id="flash"></div>
+  <button type="button" id="homebar" class="hidden" aria-label="主屏"></button>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/phone.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

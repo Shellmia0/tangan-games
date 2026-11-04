@@ -1,0 +1,16 @@
+[
+  { "name": "01-cover", "tag": "一个模拟手机界面的恐怖小游戏", "head": "捡到的手机", "big": true,
+    "sub": "深夜的公交站，长椅上有一部手机。屏幕朝上，还有电。", "img": "shots/lock.png", "pos": "top",
+    "foot": "解锁它，翻看它。它的联系人开始给你发消息。" },
+  { "name": "02-pin", "tag": "怎么玩", "head": "密码是她的生日",
+    "sub": "线索在锁屏的小组件里。错三次，会多出一条通知。", "img": "shots/pin.png", "pos": "top" },
+  { "name": "03-messages", "tag": "消息", "head": "她一直在<br>「正在输入」",
+    "sub": "周可的对话停在 8 月 2 日。后面的消息都是机主一个人发的。", "img": "shots/zhou.png", "pos": "bottom" },
+  { "name": "04-photos", "tag": "相册", "head": "最后一张的时间<br>是「刚刚」",
+    "sub": "站台上一个人背对镜头看手机。衣服和你今晚穿的一样。", "img": "shots/photo.png", "pos": "top" },
+  { "name": "05-assistant", "tag": "棠安助手", "head": "你不是她",
+    "sub": "三轮对话之后，它给你三个选择。", "img": "shots/reveal.png", "pos": "bottom" },
+  { "name": "06-cta", "tag": "现在可以玩", "head": "手机浏览器<br>直接打开",
+    "sub": "十几分钟，四个结局。链接在评论区和简介。", "img": "shots/home.png", "pos": "top",
+    "foot": "纯网页，没有真图，所有照片都是文字。" }
+]
