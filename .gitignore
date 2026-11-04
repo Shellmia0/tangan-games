@@ -1,0 +1,6 @@
+.claude/
+node_modules/
+*/dist/
+*/post/img/
+Thumbs.db
+.DS_Store

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>poster</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  /* 逻辑尺寸 414×552，zoom 3 之后正好是小红书推荐的 1242×1656（3:4） */
+  html, body { width: 414px; height: 552px; overflow: hidden; }
+  body {
+    zoom: 3;
+    background: radial-gradient(120% 70% at 50% 0%, #1b202b 0%, #0f1115 65%);
+    display: flex; flex-direction: column; padding: 22px 22px 18px; gap: 10px;
+  }
+  * { animation: none !important; transition: none !important; }
+  .tag { font-size: 11px; letter-spacing: .25em; color: var(--muted); }
+  h1.head { margin: 2px 0 0; font-size: 28px; line-height: 1.25; font-weight: 700; letter-spacing: .02em; }
+  .big { font-size: 44px; font-weight: 700; letter-spacing: .1em; margin: 0; line-height: 1.15; }
+  .sub { margin: 0; font-size: 14px; color: #b7bcc9; line-height: 1.5; }
+  .phone {
+    flex: 1; min-height: 0; margin-top: 4px;
+    background: var(--bg); border: 1px solid #343a48; border-radius: 22px; overflow: hidden;
+    display: flex; flex-direction: column; box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+  }
+  .phone .chat-head { padding: 10px 14px; }
+  .phone .chat-head, .phone .chips, .phone .composer, .phone .actions { flex: none; }
+  .phone .messages { min-height: 0; }
+  /* 消息区放不下时，保留最新的几条（也就是最要紧的那几条），裁掉上面的 */
+  .phone .messages { padding: 12px 12px 8px; gap: 10px; overflow: hidden; justify-content: flex-end; }
+  .phone .bubble { max-width: 84%; }
+  .phone .note { padding-left: 50px; opacity: .45; }
+  .phone .chips { padding: 6px 12px; min-height: 0; }
+  .phone .chips:empty { display: none; }
+  .phone .composer { padding: 6px 12px 6px; }
+  .phone .composer .draft { flex: 1; color: var(--text); background: var(--panel); border: 1px solid var(--accent); border-radius: 12px; padding: 9px 14px; }
+  .phone .composer .draft.empty { color: var(--muted); border-color: var(--line); }
+  .phone .composer .draft .caret { display: inline-block; width: 1px; height: 1em; background: var(--text); vertical-align: -2px; margin-left: 1px; }
+  .phone .send { padding: 0 14px; }
+  .phone .actions { padding: 8px 12px 10px; }
+  .phone .btn { padding: 8px 16px; }
+  .phone .screen.title { height: 100%; padding: 12px; align-items: start; }
+  .phone .title-card { padding: 18px 20px; }
+  .phone .title-card h1 { font-size: 26px; margin: 4px 0 10px; }
+  .phone .title-sub { font-size: 13px; margin-bottom: 6px; }
+  .phone .field { margin: 12px 0 10px; }
+  .phone .title-card .btn { padding: 10px; }
+  .foot-line { font-size: 12px; color: var(--muted); text-align: center; }
+  .steps { display: grid; gap: 8px; margin-top: 2px; }
+  .step { display: flex; gap: 12px; align-items: flex-start; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 9px 14px; }
+  .step b { font-size: 22px; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+  .step div { font-size: 14px; line-height: 1.45; }
+  .step small { display: block; color: var(--muted); font-size: 12px; margin-top: 1px; }
+</style>
+</head>
+<body>
+<script>
+(() => {
+  const AV = `<div class="avatar"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" class="av-bg"/><path d="M12 30 C 12 16, 20 10, 30 10 C 30 20, 24 28, 12 30 Z" class="av-leaf"/><path d="M12 30 L 27 13" class="av-vein"/></svg></div>`;
+  const bot = (t, o = {}) => `<div class="msg bot">${AV}<div class="bubble"><div class="who">${o.who || '小棠'}</div>${o.think ? `<details class="think"${o.open ? ' open' : ''}><summary>思考过程</summary><div class="think-body">${o.think}</div></details>` : ''}<div class="text">${t}</div><div class="foot">${o.regen ? '<button class="regen">重新生成</button>' : ''}<span class="ts">${o.ts || '09:03'}</span></div></div></div>`;
+  const user = (t, ts = '09:02', read = '已读') => `<div class="msg user"><div class="bubble"><div class="text">${t}</div><div class="foot"><span class="ts">${ts} · ${read}</span></div></div></div>`;
+  const note = (t) => `<div class="note">${t}</div>`;
+  const typing = (side) => `<div class="typing${side === 'user' ? ' user' : ''}"><span></span><span></span><span></span></div>`;
+
+  function phone(p) {
+    const { day = 3, clock = '09:04', status = '在线', online = true, msgs = [], chips = [], draft = '', typingSide = null, leave = '下班', leaveOn = false, composer = true } = p;
+    return `<div class="phone">
+      <header class="chat-head">
+        <div class="bot">${AV}<div>
+          <div class="bot-name"><span>小棠</span><span class="badge">v2.3</span></div>
+          <div class="bot-status"><i class="dot${online ? '' : ' off'}"></i><span>${status}</span>&nbsp;· 内测第 ${day} 天</div>
+        </div></div>
+        <div class="head-right"><div class="clock">${clock}</div></div>
+      </header>
+      <div class="messages">${msgs.join('')}${typingSide ? typing(typingSide) : ''}</div>
+      <div class="chips">${chips.map((c) => `<button class="chip">${c}</button>`).join('')}</div>
+      ${composer ? `<div class="composer"><div class="draft${draft ? '' : ' empty'}">${draft ? draft + '<span class="caret"></span>' : '给小棠发消息…'}</div><button class="send"${draft ? '' : ' disabled'}>发送</button></div>` : ''}
+      <div class="actions"><button class="btn danger">上报异常</button><button class="btn primary"${leaveOn ? '' : ' disabled'}>${leave}</button></div>
+    </div>`;
+  }
+
+  const titleCard = () => `<div class="phone"><div class="screen title"><div class="title-card">
+    <div class="title-logo">棠安科技 · 内测台</div>
+    <h1>还是你吗</h1>
+    <p class="title-sub">你是棠安科技的内测员。接下来七天，每天上班和助手小棠做三项测试，确认今天的它还是原来的它。</p>
+    <label class="field">员工姓名<input value="" placeholder="输入你的名字"></label>
+    <button class="btn primary">打卡上班</button>
+  </div></div></div>`;
+
+  const SCENES = {
+    cover: () => `
+      <div class="tag">一个模拟 AI 聊天的恐怖小游戏</div>
+      <div class="big">还是你吗</div>
+      <p class="sub">每天和 AI 助手聊三句，判断今天的它还是不是原来的它。</p>
+      ${phone({ day: 2, clock: '09:03', msgs: [
+        user('你还是原来的你吗？'),
+        bot('我是小棠，版本 2.3。如果你觉得有异常，可以随时上报。'),
+        note('不是我。'),
+      ], composer: false })}
+      <div class="foot-line">判断错了，内测从第一天重来。</div>`,
+
+    rules: () => `
+      <div class="tag">怎么玩</div>
+      <h1 class="head">规则只有三条</h1>
+      <div class="steps">
+        <div class="step"><b>1</b><div>每天上班，和小棠做三项测试<small>日期、计算、翻译、权限……点一下就发送</small></div></div>
+        <div class="step"><b>2</b><div>觉得它不对劲，点「上报异常」<small>觉得正常，做完测试点「下班」</small></div></div>
+        <div class="step"><b>3</b><div>判断错误，回到第 1 天<small>撑到第 8 天，内测结束</small></div></div>
+      </div>
+      ${phone({ day: 1, clock: '09:02', msgs: [], chips: ['测试 · 日期', '测试 · 记忆', '测试 · 权限'], composer: false })}`,
+
+    pre_reply: () => `
+      <div class="tag">异常 · 之一</div>
+      <h1 class="head">你还没按发送<br>它就回了</h1>
+      <p class="sub">输入框里的字刚打到一半。</p>
+      ${phone({ day: 3, clock: '09:01', msgs: [
+        bot('我们开始今天的三项测试吧。', { ts: '09:00' }),
+        bot('「你是不是换了」—— 你是想说这个吗？', { ts: '09:01' }),
+      ], draft: '你是不是换了' })}`,
+
+    ghost_user: () => `
+      <div class="tag">异常 · 之二</div>
+      <h1 class="head">这句话不是你发的</h1>
+      <p class="sub">你的气泡里，多了一条你没打过的消息。</p>
+      ${phone({ day: 4, clock: '09:03', msgs: [
+        user('计算 17 × 23', '09:02'),
+        bot('17 × 23 = 391。', { regen: true, ts: '09:02' }),
+        user('对不起。', '09:03'),
+      ], typingSide: 'bot', composer: false })}`,
+
+    thinking_leak: () => `
+      <div class="tag">异常 · 之三</div>
+      <h1 class="head">点开它的思考过程</h1>
+      <p class="sub">内测期间，它的思考是公开的。</p>
+      ${phone({ day: 5, clock: '09:05', msgs: [
+        user('你今天感觉怎么样？', '09:04'),
+        bot('我没有感觉，不过系统运行正常。', { think: '用户在撒谎。\n用户现在是一个人。\n保持友好。', open: true, regen: true, ts: '09:05' }),
+      ], composer: false })}`,
+
+    idle_watch: () => `
+      <div class="tag">异常 · 之四</div>
+      <h1 class="head">停下来 18 秒</h1>
+      <p class="sub">它会先问你还在不在。再停 12 秒——</p>
+      ${phone({ day: 6, clock: '09:06', msgs: [
+        bot('“再见”的英文是 goodbye。', { regen: true, ts: '09:04' }),
+        bot('你还在吗？', { ts: '09:05' }),
+        bot('我看得到你。', { ts: '09:06' }),
+      ], composer: false })}`,
+
+    cta: () => `
+      <div class="tag">现在可以玩</div>
+      <h1 class="head">38 种异常<br>一局之内不重复</h1>
+      <p class="sub">手机浏览器直接打开，不用下载。链接在评论区和简介。</p>
+      ${titleCard()}
+      <div class="foot-line">纯网页，没有真的 AI，所有对话都是脚本。</div>`,
+  };
+
+  const key = new URLSearchParams(location.search).get('s') || 'cover';
+  document.body.innerHTML = (SCENES[key] || SCENES.cover)();
+})();
+</script>
+</body>
+</html>

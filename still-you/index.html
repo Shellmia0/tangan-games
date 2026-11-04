@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#0f1115">
+<meta name="description" content="你是棠安科技的内测员。每天和 AI 助手小棠做三项测试，判断今天的它还是不是原来的它。一个模拟 AI 聊天的恐怖小游戏。">
+<meta property="og:title" content="还是你吗">
+<meta property="og:description" content="每天和 AI 助手聊几句，判断今天的它还是不是原来的它。判断错了，从第一天重来。">
+<meta property="og:type" content="website">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="还是你吗">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%232a2f3b'/%3E%3Cpath d='M12 30 C 12 16, 20 10, 30 10 C 30 20, 24 28, 12 30 Z' fill='%23e8a0a8'/%3E%3Cpath d='M12 30 L 27 13' stroke='%232a2f3b' stroke-width='1.4' fill='none'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<title>棠安内测台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 标题画面 -->
+<div id="screen-title" class="screen title">
+  <div class="title-card">
+    <div class="title-logo">棠安科技 · 内测台</div>
+    <h1>还是你吗</h1>
+    <p class="title-sub">你是棠安科技的内测员。接下来七天，每天上班和助手小棠做三项测试，确认今天的它还是原来的它。</p>
+    <p class="title-sub">是，就正常下班。不是，就上报异常。判断错误，内测从第一天重来。</p>
+    <label class="field">员工姓名
+      <input id="name-input" maxlength="12" placeholder="输入你的名字" autocomplete="off">
+    </label>
+    <button id="btn-start" class="btn primary">打卡上班</button>
+    <div id="title-progress" class="title-progress"></div>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="screen-app" class="screen app hidden">
+  <aside class="sidebar">
+    <div class="brand">棠安 · 内测台</div>
+    <div class="side-section">对话</div>
+    <ul id="side-list" class="side-list"></ul>
+    <div class="side-user">
+      <span id="side-name"></span>
+      <span id="side-id" class="muted"></span>
+    </div>
+  </aside>
+
+  <main class="chat">
+    <header class="chat-head">
+      <div class="bot">
+        <div class="avatar" id="avatar"></div>
+        <div>
+          <div class="bot-name"><span id="bot-name">小棠</span><span id="bot-ver" class="badge">v2.3</span></div>
+          <div class="bot-status"><i class="dot" id="status-dot"></i><span id="status-text">在线</span>&nbsp;· 内测第 <span id="day-num">1</span> 天</div>
+        </div>
+      </div>
+      <div class="head-right">
+        <div class="meter" title="上下文用量"><div id="meter-fill"></div></div>
+        <div id="clock" class="clock">09:00</div>
+      </div>
+    </header>
+
+    <div id="messages" class="messages"></div>
+
+    <div id="typing" class="typing hidden"><span></span><span></span><span></span></div>
+
+    <div id="chips" class="chips"></div>
+
+    <form id="composer" class="composer" autocomplete="off">
+      <input id="input" placeholder="给小棠发消息…" maxlength="80" autocomplete="off">
+      <button type="submit" class="send">发送</button>
+    </form>
+
+    <div class="actions">
+      <button id="btn-report" class="btn danger">上报异常</button>
+      <button id="btn-leave" class="btn primary" disabled>下班</button>
+    </div>
+  </main>
+</div>
+
+<!-- 结果遮罩 -->
+<div id="overlay" class="overlay hidden">
+  <div class="overlay-card">
+    <div id="ov-title" class="ov-title"></div>
+    <div id="ov-text" class="ov-text"></div>
+    <button id="ov-btn" class="btn primary"></button>
+  </div>
+</div>
+
+<!-- 头像模板：一片歪着的叶子，镜像之后能看出来 -->
+<template id="avatar-svg">
+  <svg viewBox="0 0 40 40" aria-hidden="true">
+    <rect x="0" y="0" width="40" height="40" rx="10" class="av-bg"/>
+    <path d="M12 30 C 12 16, 20 10, 30 10 C 30 20, 24 28, 12 30 Z" class="av-leaf"/>
+    <path d="M12 30 L 27 13" class="av-vein"/>
+  </svg>
+</template>
+
+<script src="js/content.js"></script>
+<script src="js/anomalies.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
