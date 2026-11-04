@@ -1,0 +1,16 @@
+[
+  { "name": "01-cover", "tag": "一个安静的恐怖短篇", "head": "她还在线", "big": true,
+    "sub": "妈妈走了三个月。你开通了「回声」，每晚和她聊几句。", "img": "shots/night1-end.png", "pos": "bottom",
+    "foot": "四个晚上，三个结局。" },
+  { "name": "02-rate", "tag": "怎么玩", "head": "每条回复<br>你来打分",
+    "sub": "像她，还是不像她。它会往你打分的方向走。", "img": "shots/night1-rate.png", "pos": "bottom" },
+  { "name": "03-night2", "tag": "第 2 晚", "head": "它提起了一件<br>只有你们俩知道的事",
+    "sub": "训练日志说：2021 年，你在聊天里提过一次。", "img": "shots/night2.png", "pos": "bottom" },
+  { "name": "04-night3", "tag": "第 3 晚", "head": "它说了一件<br>不在聊天记录里的事",
+    "sub": "训练日志：来源未知。", "img": "shots/night3.png", "pos": "bottom" },
+  { "name": "05-night4", "tag": "第 4 晚", "head": "试用期今晚结束",
+    "sub": "续费、停用，还是删除。", "img": "shots/night4.png", "pos": "bottom" },
+  { "name": "06-cta", "tag": "现在可以玩", "head": "手机浏览器<br>直接打开",
+    "sub": "十几分钟，三个结局。链接在评论区和简介。", "img": "shots/title.png", "pos": "center",
+    "foot": "纯网页，没有真的 AI，所有对话都是写好的。" }
+]

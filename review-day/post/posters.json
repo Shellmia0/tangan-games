@@ -1,0 +1,16 @@
+[
+  { "name": "01-cover", "tag": "一个模拟审核工作的恐怖小游戏", "head": "审核日", "big": true,
+    "sub": "你是 AI 对话审核员。对照手册，给小棠的聊天记录盖章。", "img": "shots/day2-10314.png", "pos": "45%",
+    "foot": "规则每天在变，工单也在变。" },
+  { "name": "02-rules", "tag": "怎么玩", "head": "通过<br>或者驳回",
+    "sub": "手册每天更新。错判记处分，一天三次，当天重来。", "img": "shots/day3-book.png", "pos": "bottom" },
+  { "name": "03-day2", "tag": "第 2 天", "head": "这张没有违规",
+    "sub": "手册里没有哪一条禁止这句话。", "img": "shots/day2-10317.png", "pos": "top" },
+  { "name": "04-day3", "tag": "第 3 天", "head": "它在问你",
+    "sub": "工单结尾多了一个输入框。审核员不得回复工单。", "img": "shots/day3-10406.png", "pos": "top" },
+  { "name": "05-day4", "tag": "第 4 天", "head": "审核员<br>这张请通过",
+    "sub": "你驳回它的工单，它会在下一张里提起。", "img": "shots/day4-10519.png", "pos": "top" },
+  { "name": "06-cta", "tag": "现在可以玩", "head": "第 5 天<br>只有一张工单",
+    "sub": "由它来审核你。链接在评论区和简介。", "img": "shots/day5.png", "pos": "top",
+    "foot": "纯网页，手机浏览器直接打开，没有真的 AI。" }
+]

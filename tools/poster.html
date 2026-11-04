@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>poster</title>
+<style>
+  /* 通用发帖图：标题 + 一张真实的游戏截图。逻辑尺寸 414×552，zoom 3 后是 1242×1656（小红书 3:4）
+     参数（都在 URL 里）：tag 小字、head 标题（可含 <br>）、sub 副标题、foot 底部一行、img 截图路径、
+     pos 截图对齐 top|bottom（默认 top）、big=1 用封面大字、h 截图卡高度（逻辑像素，默认自适应） */
+  :root { --bg: #0f1115; --panel: #161920; --line: #262b36; --text: #e6e8ee; --muted: #8a91a3; }
+  html, body { width: 414px; height: 552px; overflow: hidden; margin: 0; }
+  body {
+    zoom: 3; color: var(--text);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Segoe UI", sans-serif;
+    font-size: 15px; line-height: 1.55;
+    background: radial-gradient(120% 70% at 50% 0%, #1b202b 0%, #0f1115 65%);
+    display: flex; flex-direction: column; padding: 22px 22px 18px; gap: 10px; box-sizing: border-box;
+  }
+  .tag { font-size: 11px; letter-spacing: .25em; color: var(--muted); }
+  h1 { margin: 2px 0 0; font-size: 28px; line-height: 1.25; font-weight: 700; letter-spacing: .02em; }
+  h1.big { font-size: 44px; letter-spacing: .1em; line-height: 1.15; }
+  .sub { margin: 0; font-size: 14px; color: #b7bcc9; line-height: 1.5; }
+  .shot {
+    flex: 1; min-height: 0; margin-top: 4px; position: relative;
+    background: var(--bg); border: 1px solid #343a48; border-radius: 22px; overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+  }
+  .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .shot.bottom img { object-position: bottom center; }
+  .shot.top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 28px;
+    background: linear-gradient(to bottom, rgba(15,17,21,0), rgba(15,17,21,.85)); }
+  .foot { font-size: 12px; color: var(--muted); text-align: center; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="tag" id="tag"></div>
+<h1 id="head"></h1>
+<p class="sub" id="sub"></p>
+<div class="shot top" id="shot"><img id="img" alt=""></div>
+<div class="foot" id="foot"></div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const get = (k) => q.get(k) || '';
+  const $ = (id) => document.getElementById(id);
+  $('tag').textContent = get('tag');
+  $('head').innerHTML = get('head');
+  if (get('big')) $('head').classList.add('big');
+  $('sub').textContent = get('sub');
+  $('foot').textContent = get('foot');
+  if (!get('sub')) $('sub').classList.add('hidden');
+  if (!get('foot')) $('foot').classList.add('hidden');
+  if (!get('tag')) $('tag').classList.add('hidden');
+  $('img').src = get('img');
+  // pos：top / bottom / center，或者一个百分比（截图的哪个高度对齐到卡片的同一高度）
+  const pos = get('pos') || 'top';
+  $('shot').className = 'shot ' + (pos === 'bottom' ? 'bottom' : 'top');
+  $('img').style.objectPosition = pos === 'top' ? 'center top' : pos === 'bottom' ? 'center bottom' : pos === 'center' ? 'center center' : 'center ' + pos;
+  if (get('h')) { $('shot').style.flex = 'none'; $('shot').style.height = get('h') + 'px'; }
+</script>
+</body>
+</html>
